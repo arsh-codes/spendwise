@@ -1,12 +1,27 @@
 import "./App.css";
 
+import { Route, Routes } from "react-router";
+
+import About from "./pages/About";
+import Features from "./pages/Features";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Navbar from "./components/Navbar";
+import Pricing from "./pages/Pricing";
+import Signup from "./pages/Signup";
+
 function App() {
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <button className="bg-sky-700 px-4 py-2 text-white hover:bg-sky-800 sm:px-8 sm:py-3">
-        ...
-      </button>
+      <Navbar />
+      <Routes>
+        <Route path="/about" element={<About />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Home />} />
+      </Routes>
     </>
   );
 }

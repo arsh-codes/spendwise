@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.SERVER_PORT || 4000;
 const DB_URL = process.env.MONGO_DATABASE_URL;
 
 if (!DB_URL) {
