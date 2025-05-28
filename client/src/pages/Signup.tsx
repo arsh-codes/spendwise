@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router";
+import { signupUser } from "@/api/auth";
 import { useState } from "react";
 
 export default function Signup() {
@@ -23,7 +24,7 @@ export default function Signup() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name || !email || !password || !confirmPassword) {
       setError("Please fill in all fields");
       return;
@@ -34,14 +35,28 @@ export default function Signup() {
       return;
     }
 
-    setError("");
-    setSubmitted(true);
-    // In a real app, you would send this data to your backend
+    try {
+      await signupUser({ name, email, password });
+      setError("");
+      setSubmitted(true);
+
+      // Optional: Clear form
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+
+      // Optionally redirect to login or show success
+      // navigate("/login");
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || "Signup failed. Please try again.");
+      setSubmitted(false);
+    }
   };
 
   return (
     <div className="flex min-h-screen flex-col bg-neutral-50 px-4 py-8 sm:px-6 md:px-12 lg:px-20">
-      {/* Main Content */}
       <main className="flex flex-1 flex-col items-center justify-center">
         <div className="w-full max-w-md">
           {submitted && (

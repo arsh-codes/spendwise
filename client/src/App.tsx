@@ -3,6 +3,7 @@ import "./App.css";
 import { Route, Routes } from "react-router";
 
 import About from "./pages/About";
+import Dashboard from "./pages/Dashboard";
 import Features from "./pages/Features";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -20,6 +21,7 @@ function App() {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/features" element={<Features />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/" element={<Home />} />
       </Routes>
     </>

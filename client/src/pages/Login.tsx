@@ -8,11 +8,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Check, DollarSign, Lock, Mail, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router";
+import { login } from "../redux/slices/authSlice";
+import { loginUser } from "@/api/auth";
+import { useDispatch } from "react-redux";
 import { useState } from "react";
 
 export default function Login() {
@@ -20,16 +23,32 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!email || !password) {
       setError("Please fill in all fields");
       return;
     }
 
-    setError("");
-    setSubmitted(true);
-    // In a real app, you would send this data to your backend
+    try {
+      const data = await loginUser({ email, password });
+      console.log("Login Success:", data);
+
+      setError("");
+      setSubmitted(true);
+      dispatch(login());
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+    } catch (err) {
+      console.error(err);
+      setError(
+        err.response?.data?.message || "Login failed. Please try again.",
+      );
+    }
   };
 
   return (

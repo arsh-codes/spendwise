@@ -11,19 +11,24 @@ dotenv.config();
 const app = express();
 const PORT = process.env.SERVER_PORT || 4000;
 const DB_URL = process.env.MONGO_DATABASE_URL;
-
+const FRONTEND_URL = process.env.FRONTEND_URL;
 if (!DB_URL) {
     console.error("❌ MONGO_DATABASE_URL not found in environment variables");
     process.exit(1);
 }
 
 // Middleware
-app.use(cors());
+app.use(
+    cors({
+        origin: FRONTEND_URL,
+        credentials: true,
+    })
+);
+
 app.use(bodyParser.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
-
 
 // Sample root route
 app.get("/", (req, res) => {
