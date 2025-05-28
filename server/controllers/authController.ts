@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 
-import User from "../models/User";
+import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
@@ -13,31 +13,34 @@ const JWT_SECRET_KEY: string =
         throw new Error("Missing JWT_SECRET_KEY environment variable");
     })();
 
-export const login = async (
+export const login: RequestHandler = async (
     req: Request,
     res: Response
-): Promise<Response> => {
+): Promise<void> => {
     try {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res
-                .status(400)
-                .json({ message: "Email and password are required." });
+            res.status(400).json({
+                message: "Email and password are required.",
+            });
+            return;
         }
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res
-                .status(401)
-                .json({ message: "User doesn't exist. Please sign up." });
+            res.status(401).json({
+                message: "User doesn't exist. Please sign up.",
+            });
+            return;
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res
-                .status(401)
-                .json({ message: "Invalid Password. Please try again." });
+            res.status(401).json({
+                message: "Invalid Password. Please try again.",
+            });
+            return;
         }
 
         const token = jwt.sign(
@@ -48,7 +51,7 @@ export const login = async (
             }
         );
 
-        return res.status(200).json({
+        res.status(200).json({
             message: "Login successful",
             token,
             user: {
@@ -59,18 +62,22 @@ export const login = async (
         });
     } catch (err) {
         console.error("Login error:", err);
-        return res.status(500).json({ message: "Login error", error: err });
+        res.status(500).json({ message: "Login error", error: err });
     }
 };
 
-export const signup = async (req: Request, res: Response) => {
+export const signup: RequestHandler = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
     const { name, email, password } = req.body;
 
     try {
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(409).json({ message: "User already exists" });
+            res.status(409).json({ message: "User already exists" });
+            return;
         }
 
         // Hash password

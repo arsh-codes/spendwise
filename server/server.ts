@@ -1,4 +1,4 @@
-import authRoutes from "./routes/authRoutes";
+import authRouter from "./routes/authRoutes.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -28,7 +28,7 @@ app.use(
 app.use(bodyParser.json());
 
 // Routes
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRouter);
 
 // Sample root route
 app.get("/", (req, res) => {
